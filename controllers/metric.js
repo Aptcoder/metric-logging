@@ -16,4 +16,14 @@ const postMetricValue = async (req, res, next) => {
   }
 };
 
-module.exports = { postMetricValue };
+const getKeyValuesSum = async (req, res, next) => {
+  const { key } = req.params;
+  try {
+    const sum = await MetricStore.getSumForKey(key);
+    return res.send({ value: sum });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+module.exports = { postMetricValue, getKeyValuesSum };
