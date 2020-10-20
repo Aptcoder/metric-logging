@@ -4,6 +4,8 @@
   "description": "Metric taking app as assessment test ",
   "main": "app.js",
   "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "milz",
