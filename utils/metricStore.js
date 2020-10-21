@@ -5,7 +5,7 @@ class MetricStore {
   static async readStore() {
     try {
       const data = await fs.readFile('./metric-store.json');
-      console.log('data', data);
+      console.log('data', JSON.parse(data));
       return JSON.parse(data);
     } catch (err) {
       throw new Error(err.message);
@@ -32,17 +32,18 @@ class MetricStore {
   }
 
   static async getSumForKey(key) {
-    const oneHourAgo = new Date(new Date() - 60 * 60 * 1000);
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
     try {
       const store = await MetricStore.readStore();
       if (!store.hasOwnProperty(key)) {
         return null;
       }
-      // metric values is an array of all properties of the store in a [key, value] array
-      const metricValues = store[key].entries();
+      // metric values is an array of all properties of the key in the store in a [key, value] array
+      const metricValues = Object.entries(store[key]);
       const sum = metricValues.reduce((accumulator, current) => {
-      // if current.key is less than one hour ago, do not use
+        // if current.key is less than one hour ago, do not use
         if (new Date(current[0]) < new Date(oneHourAgo)) {
+          console.log('diff', new Date(current[0]) - new Date(oneHourAgo));
           return accumulator;
         }
         return accumulator + parseInt(current[1], 10);
