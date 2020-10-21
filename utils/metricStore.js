@@ -2,10 +2,10 @@
 const fs = require('fs').promises;
 
 class MetricStore {
-  static async readStore() {
+  static async readStore(path) {
+    const pathToUse = path || './metric-store.json';
     try {
-      const data = await fs.readFile('./metric-store.json');
-      console.log('data', JSON.parse(data));
+      const data = await fs.readFile(pathToUse);
       return JSON.parse(data);
     } catch (err) {
       throw new Error(err.message);
@@ -13,7 +13,8 @@ class MetricStore {
     }
   }
 
-  static async writeToStore(key, value) {
+  static async writeToStore(key, value, path) {
+    const pathToUse = path || './metric-store.json';
     try {
       const store = await MetricStore.readStore();
       // eslint-disable-next-line no-prototype-builtins
@@ -24,17 +25,17 @@ class MetricStore {
           [new Date().toISOString()]: value
         };
       }
-      await fs.writeFile('./metric-store.json', JSON.stringify(store, null, 2));
+      await fs.writeFile(pathToUse, JSON.stringify(store, null, 2));
     } catch (err) {
-      console.log('Error in writing to store', err);
       throw new Error(err.message);
     }
   }
 
-  static async getSumForKey(key) {
+  static async getSumForKey(key, path) {
+    const pathToUse = path || './metric-store.json';
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
     try {
-      const store = await MetricStore.readStore();
+      const store = await MetricStore.readStore(pathToUse);
       if (!store.hasOwnProperty(key)) {
         return null;
       }
@@ -43,7 +44,6 @@ class MetricStore {
       const sum = metricValues.reduce((accumulator, current) => {
         // if current.key is less than one hour ago, do not use
         if (new Date(current[0]) < new Date(oneHourAgo)) {
-          console.log('diff', new Date(current[0]) - new Date(oneHourAgo));
           return accumulator;
         }
         return accumulator + parseInt(current[1], 10);
