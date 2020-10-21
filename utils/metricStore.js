@@ -2,8 +2,8 @@
 const fs = require('fs').promises;
 
 class MetricStore {
-  static async readStore(path) {
-    const pathToUse = path || './metric-store.json';
+  static async readStore() {
+    const pathToUse = process.env.NODE_ENV === 'testing' ? './test/mock/metric-store.json' : './metric-store.json';
     try {
       const data = await fs.readFile(pathToUse);
       return JSON.parse(data);
@@ -13,8 +13,8 @@ class MetricStore {
     }
   }
 
-  static async writeToStore(key, value, path) {
-    const pathToUse = path || './metric-store.json';
+  static async writeToStore(key, value) {
+    const pathToUse = process.env.NODE_ENV === 'testing' ? './test/mock/metric-store.json' : './metric-store.json';
     try {
       const store = await MetricStore.readStore();
       // eslint-disable-next-line no-prototype-builtins
@@ -31,11 +31,10 @@ class MetricStore {
     }
   }
 
-  static async getSumForKey(key, path) {
-    const pathToUse = path || './metric-store.json';
+  static async getSumForKey(key) {
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
     try {
-      const store = await MetricStore.readStore(pathToUse);
+      const store = await MetricStore.readStore();
       if (!store.hasOwnProperty(key)) {
         return null;
       }
