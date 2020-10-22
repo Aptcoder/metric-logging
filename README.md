@@ -1,4 +1,5 @@
 ## Metric Logger API
+Base URL: https://metric-logger-api.herokuapp.com/
 
 *  `POST` /api/metric/:key/
 
@@ -55,7 +56,8 @@
 	* Error response
 	
 		status: 404
-
+		This is a response when the key is not found. Note that only metrics in the last hour are stored so a key with
+		no metrics from the last hour would also give this response.
 		body:
 		```
 		{
