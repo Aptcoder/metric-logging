@@ -26,6 +26,13 @@ describe('Metric route', () => {
       expect(res.body).to.have.property('value');
       expect(res.body.value).to.eql(150);
     });
+
+    it('Sould return 404 if key not found', async () => {
+      const res = await request(app)
+        .get('/api/metric/notUsed/sum')
+        .expect(404);
+      expect(res.body.status).to.equal('error');
+    });
   });
 
   describe('POST /', () => {
@@ -38,6 +45,13 @@ describe('Metric route', () => {
       const data = await MetricStore.readStore();
       expect(data).to.have.property('asset_value');
       expect(Object.values(data.asset_value)).to.include(345);
+    });
+
+    it('Should throw error if value is not a number', async () => {
+      await request(app)
+        .post('/api/metric/asset_value')
+        .send({ value: 'string' })
+        .expect(400);
     });
   });
 });

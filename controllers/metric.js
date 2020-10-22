@@ -5,7 +5,7 @@ const postMetricValue = async (req, res, next) => {
   const { key } = req.params;
   const { value } = req.body;
 
-  if (!value || Number.isNaN(value)) {
+  if (!value || typeof value !== 'number') {
     return next(new ErrorHandler(400, 'A valid numeric metric value is required'));
   }
   try {
