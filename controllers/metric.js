@@ -20,6 +20,9 @@ const getKeyValuesSum = async (req, res, next) => {
   const { key } = req.params;
   try {
     const sum = await MetricStore.getSumForKey(key);
+    if (!sum) {
+      throw new ErrorHandler(404, 'Key not found');
+    }
     return res.send({ value: sum });
   } catch (err) {
     return next(err);
