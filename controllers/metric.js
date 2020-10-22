@@ -5,11 +5,11 @@ const postMetricValue = async (req, res, next) => {
   const { key } = req.params;
   const { value } = req.body;
 
-  if (!value) {
-    return next(new ErrorHandler(400, 'A metric value is required'));
+  if (!value || Number.isNaN(value)) {
+    return next(new ErrorHandler(400, 'A valid numeric metric value is required'));
   }
   try {
-    await MetricStore.writeToStore(key, value);
+    await MetricStore.writeToStore(key, Math.round(value));
     return res.send({});
   } catch (err) {
     return next(err);
