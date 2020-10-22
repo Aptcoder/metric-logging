@@ -15,8 +15,23 @@
 	    --------|----------|--------|-------
 	    | value | yes | metric value | Number
 
-	* Response Body 
-	{}
+	* Sucsess Response 
+	
+	status: `200`
+	
+	body: {}
+	
+	* Error Response 
+	
+	status: 400
+	
+	body:
+	```
+	{
+	status: error
+	message: A valid numeric value is required
+	}
+	```
 
 * `GET` /api/metric/:key/sum
 
@@ -27,8 +42,24 @@
 		 -------|----------|----------|----
 		 |    key | yes | key name under which metrics should be logged| String
 
-	 * Response Body 
+	 * Success Response
 	 
-	     |  Name |  detail| type 
-	    --------|----------|--------------
-	    | value  | sum of metrics from last two hours| Integer
+		 status: `200` 
+		 body:
+		```
+		{
+		  value: [sum]
+		}
+		```
+
+	* Error response
+	
+		status: 404
+
+		body:
+		```
+		{
+		status: error
+		message: Key not found
+		}
+		```
