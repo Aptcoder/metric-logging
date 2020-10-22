@@ -1,6 +1,7 @@
 // Third party modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 // App modules
 const metricRouter = require('./routes/metricRoutes');
@@ -8,6 +9,7 @@ const { handleError } = require('./utils/errors');
 // express app
 const app = express();
 
+app.use(morgan('tiny'));
 app.use(bodyParser.json());
 
 app.use('/api/metric', metricRouter);
