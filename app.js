@@ -12,6 +12,10 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
 
+app.use('/', (req, res) => {
+    res.send({})
+});
+
 app.use('/api/metric', metricRouter);
 
 // express error handling
